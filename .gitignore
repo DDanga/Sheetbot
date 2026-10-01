@@ -1,0 +1,29 @@
+# secrets — never commit
+.env
+google-key*
+*-key.json
+# Google names a fresh key like project-a1b2c3.json; the project itself has no JSON files
+*.json
+
+# python
+__pycache__/
+*.pyc
+.venv/
+venv/
+.pytest_cache/
+.ruff_cache/
+
+# runtime data
+data/
+*.sqlite
+*.log
+
+# OS / editor
+.vscode/
+.idea/
+Thumbs.db
+.DS_Store
+desktop.ini
+
+# private notes, shared on request
+docs/BUILD_DIARY.md

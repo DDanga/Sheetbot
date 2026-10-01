@@ -1,0 +1,611 @@
+"""All texts the bot sends, in English and Russian.
+
+English is the default on first launch; /lang switches per user.
+"""
+
+from __future__ import annotations
+
+LANGS = ("en", "ru")
+DEFAULT_LANG = "en"
+
+TEXTS: dict[str, dict[str, str]] = {
+    "en": {
+        "start_admin": (
+            "Hi! I'm watching the spreadsheet “{title}”.\n"
+            "Sheets: {sheets}.\n\n"
+            "You're the first one here, so you're the admin.\n\n"
+            "{help}"
+        ),
+        "start_again": "Hi again! I'm watching “{title}”.\nSheets: {sheets}.\n\n{help}",
+        "start_offline": "Hi! You're the admin.\n\n{error}\n\n{help}",
+        "help": (
+            "What I can do:\n"
+            "/newrule — create a notification, report or analysis\n"
+            "/rules — all rules\n"
+            "/report — send a report now\n"
+            "/invite — invite a person\n"
+            "/users — people and teams\n"
+            "/pause — pause my notifications\n"
+            "/status — is everything working\n"
+            "/lang — switch language"
+        ),
+        "help_member": (
+            "What I can do for you:\n"
+            "/report — send a report now\n"
+            "/pause — pause my notifications\n"
+            "/status — is everything working\n"
+            "/lang — switch language"
+        ),
+        "no_access": (
+            "Sorry, this bot is private.\n"
+            "Ask its owner to add you and send them your chat ID: {chat_id}"
+        ),
+        "status_ok": "✅ Spreadsheet “{title}” is reachable\n\n{lines}\n\n🕐 Time zone: {tz}",
+        "status_sheet": "• {name} — {rows} rows, columns: {cols}",
+        "status_sheet_empty": "• {name} — empty",
+        "status_fail": "❌ Can't read the spreadsheet\n\n{error}\n\n🕐 Time zone: {tz}",
+        "err_bad_key": (
+            "The Google key doesn't work. Download a new JSON key for the service account "
+            "and replace the file in the bot folder."
+        ),
+        "err_not_shared": (
+            "No access to the spreadsheet. Open it, press Share and add this address "
+            "as a Viewer:\n{email}\n\nAlso check that the link in .env is right."
+        ),
+        "err_not_found": "The spreadsheet wasn't found. Check the SPREADSHEET link in .env.",
+        "err_network": "Google isn't answering right now. I'll keep trying; check /status in a minute.",
+        "lang_set": "Language: English 🇬🇧",
+        "cmd_status": "Is everything working",
+        "cmd_lang": "Switch language",
+        # ---- rule builder ----
+        "nr_kind": "What are we creating?",
+        "kind_notify": "🔔 Notification",
+        "kind_report": "📊 Report",
+        "kind_analysis": "📈 Analysis",
+        "nr_sheet": "Which sheet?",
+        "nr_no_sheets": "The spreadsheet has no sheets with column names in the first row.",
+        "nr_column": "Sheet «{sheet}». Which column do we check?",
+        "nr_op": "{column} — condition?",
+        "op_changed": "changed",
+        "op_empty": "is empty",
+        "op_contains": "contains",
+        "nr_target": "{column} {op} … compare with what?",
+        "tgt_value_num": "A number",
+        "tgt_value_text": "A value",
+        "tgt_column": "Another column",
+        "nr_target_col": "{column} {op} … which column?",
+        "nr_type_number": "Type the number (for example, 10):",
+        "nr_type_text": "Type the text to look for:",
+        "nr_type_value": "Type the value:",
+        "nr_not_number": "That's not a number. Type a number, for example 10.",
+        "nr_label": (
+            "Which column names the row in messages?\n"
+            "Like this: «⚠ Milk: …» instead of «⚠ row 2: …».\n\nNow: {current}"
+        ),
+        "label_row": "By row number",
+        "nr_to": "Who gets the notification?",
+        "to_me": "Me",
+        "to_all": "Everyone with access",
+        "nr_preview": "Let's check:\n\n🔔 {title}\n👤 {to}\n\nMessage:\n{sample}\n\n{now}",
+        "now_hits": "Right now it would fire for {n} rows: {names}.",
+        "now_hits_more": "{names} and {more} more",
+        "now_none": "Right now no row meets the condition.",
+        "now_changed": "It fires when a value in «{column}» changes.",
+        "btn_save": "✅ Save",
+        "btn_cond": "✏ Condition",
+        "btn_msg": "✏ Message",
+        "btn_to": "✏ Recipients",
+        "btn_label": "✏ Row name",
+        "btn_back_rules": "⬅ Back to rules",
+        "btn_cancel": "✖ Cancel",
+        "btn_back": "⬅ Back",
+        "nr_msg": (
+            "Write your own message. Column names in curly braces are filled in from the row, "
+            "for example:\n⚠ {{{example}}}: only {{{column}}} left\n\nColumns: {columns}"
+        ),
+        "btn_msg_reset": "↩ Default message",
+        "nr_msg_unknown": "No such column: {names}. Check the spelling and send the text again.",
+        "nr_saved": "Saved ✅\n🔔 {title}\n\nAll rules: /rules",
+        "nr_cancelled": "Cancelled.",
+        "stale_tap": "This menu is out of date — use the newest one, or start again: /newrule",
+        "nr_empty_text": "I need text here. Type it as a regular message.",
+        "nr_too_long": "That's too long — keep it under {n} characters.",
+        "row_word": "row",
+        # ---- rule list ----
+        "rules_title": "Rules ({n}):",
+        "rules_empty": "No rules yet. Create the first one: /newrule",
+        "rule_on": "▶ on",
+        "rule_off": "⏸ paused",
+        "rule_card": "🔔 {title}\n👤 {to}\nStatus: {status}",
+        "btn_edit": "✏ Edit",
+        "btn_pause": "⏸ Pause",
+        "btn_resume": "▶ Resume",
+        "btn_check": "🧪 Check now",
+        "btn_delete": "🗑 Delete",
+        "btn_all_rules": "⬅ All rules",
+        "rule_delete_q": "Delete the rule «{title}»?",
+        "btn_delete_yes": "🗑 Yes, delete",
+        "rule_deleted": "Rule deleted.",
+        "check_hits": "🧪 {title}\nRight now it fires for {n} rows:\n\n{lines}",
+        "check_more": "…and {n} more",
+        "check_none": "🧪 {title}\nRight now no row meets the condition.",
+        "check_changed": "🧪 {title}\nThis rule reacts to changes, so there's nothing to show right now.",
+        "rule_broken_col": "The column «{name}» is gone from the sheet «{sheet}». Edit the rule.",
+        "rule_broken_sheet": "The sheet «{name}» is gone from the spreadsheet. Edit the rule.",
+        # ---- notifications ----
+        "alert_head": "🔔 {title}",
+        "alert_more": "…and {n} more",
+        "resolved_head": "✅ {title}",
+        "resolved_line": "{name} — back to normal",
+        "broken_paused": "⚠ The rule «{title}» is paused.\n{reason}",
+        "broken_suggest": "Similar name in the sheet: «{name}».",
+        "btn_use": "Use «{name}»",
+        "rule_fixed": "Fixed ✅ The rule now uses «{name}».",
+        "rule_broken_status": "⚠ stopped",
+        "sheet_down": "⚠ I can't read the spreadsheet.\n{error}\n\nI'll keep trying and tell you when it's back.",
+        "sheet_back": "✅ The spreadsheet is reachable again. Checks are back on.",
+        "status_rules": "🔔 Rules: {active} active, {paused} paused",
+        "status_checked": "🔄 Last check: {ago} · every {n} min",
+        "status_never": "🔄 Not checked yet · every {n} min",
+        "ago_now": "just now",
+        "ago_min": "{n} min ago",
+        "ago_hours": "{n} h ago",
+        "btn_resolved_on": "🔁 “Back to normal” messages: on",
+        "btn_resolved_off": "🔁 “Back to normal” messages: off",
+        # ---- reports ----
+        "report_head": "📊 {sheet} · {period}",
+        "report_empty": "No data for this period.",
+        "report_by": "By {column}:",
+        "m_count": "Rows",
+        "m_avg": "Average {column}",
+        "m_max": "Max {column}",
+        "m_min": "Min {column}",
+        "period_yesterday": "Yesterday",
+        "period_today": "Today",
+        "period_last7": "Last 7 days",
+        "period_this_month": "This month",
+        "period_last_month": "Last month",
+        "freq_daily": "Every day",
+        "freq_weekdays": "Weekdays",
+        "freq_weekly": "Once a week",
+        "freq_monthly": "On the 1st of the month",
+        "freq_weekly_on": "Every {day}",
+        "wd_0": "Monday", "wd_1": "Tuesday", "wd_2": "Wednesday", "wd_3": "Thursday",
+        "wd_4": "Friday", "wd_5": "Saturday", "wd_6": "Sunday",
+        "wds_0": "Mon", "wds_1": "Tue", "wds_2": "Wed", "wds_3": "Thu", "wds_4": "Fri", "wds_5": "Sat", "wds_6": "Sun",
+        "rb_sheet": "Report on which sheet?",
+        "rb_no_dates": "No sheet has a column with dates. A report counts rows by date, so it needs one.",
+        "rb_date": "Which column holds the date?",
+        "rb_period": "For which period?",
+        "rb_func": "What to count?",
+        "f_sum": "Sum", "f_avg": "Average", "f_max": "Maximum", "f_min": "Minimum", "f_count": "Number of rows",
+        "rb_column": "{func} of which column?",
+        "rb_more": "Counting: {metrics}\nAdd another figure?",
+        "btn_more": "➕ One more",
+        "btn_done": "Done",
+        "rb_group": "Split by a column?",
+        "btn_no_split": "No split",
+        "rb_freq": "When to send it?",
+        "rb_weekday": "On which day?",
+        "rb_time": "At what time? ({tz})",
+        "btn_own_time": "Other time",
+        "rb_type_time": "Type the time, for example 9:30",
+        "rb_bad_time": "That's not a time. Type it like 9:30 or 18:00.",
+        "rb_preview": "Let's check:\n\n📊 {title}\n🗓 {schedule}\n👤 {to}\n\nIf it were sent now:\n\n{sample}",
+        "btn_metrics": "✏ Figures",
+        "btn_schedule": "✏ Schedule",
+        "btn_period": "✏ Period",
+        "rb_saved": "Saved ✅\n📊 {title}\n🗓 {schedule}\n\nAll rules: /rules · send now: /report",
+        "report_card": "📊 {title}\n🗓 {schedule}\n👤 {to}\nStatus: {status}",
+        "btn_send_now": "📤 Send now",
+        "report_sent": "Sent ✅",
+        "reports_none": "No reports yet. Create one: /newrule → 📊 Report",
+        "reports_pick": "Which report to send now?",
+        "report_broken": "⚠ The report «{title}» is paused.\n{reason}",
+        "cmd_report": "Send a report now",
+        # ---- analysis ----
+        "unit_day": "day to day", "unit_week": "week to week", "unit_month": "month to month",
+        "an_line": "{period}: {value} (rows: {n})",
+        "an_leaders": "Leaders:",
+        "an_top_title": "top {n} by «{item}»",
+        "an_top_head": "🏆 Top · {period}",
+        "an_by_qty": "By quantity:",
+        "an_by_profit": "By profit:",
+        "an_star": "💎 Hidden star: {name}\nOnly #{qty_rank} by quantity ({qty}), but #{profit_rank} by profit{margin}.",
+        "an_margin": ", margin {pct}%",
+        "an_best_seller": "{name} sells best but made only {profit}.",
+        "an_quiet": "ℹ Right now the condition isn't met, so on schedule I'd stay quiet.",
+        "when_always": "always",
+        "when_drop": "only if it falls by more than {pct}%",
+        "when_change": "only if it changes by more than {pct}%",
+        "ab_kind": "What kind of analysis?",
+        "ak_compare": "Compare periods",
+        "ak_top": "Top items",
+        "ab_unit": "Which periods to compare?",
+        "ab_when": "When should I tell you?",
+        "w_always": "Always",
+        "w_drop": "If it fell by more than…",
+        "w_change": "If it changed by more than…",
+        "ab_pct": "By more than how many percent?",
+        "btn_own_pct": "Other",
+        "ab_type_pct": "Type the percent, for example 15",
+        "ab_bad_pct": "Type a number from 1 to 1000, for example 15.",
+        "ab_item": "What counts as an item?",
+        "ab_qty": "How to measure quantity?",
+        "q_rows": "Number of rows",
+        "ab_profit": "How to count profit?",
+        "p_diff": "Revenue − cost",
+        "p_column": "There's a profit column",
+        "p_none": "Without profit",
+        "ab_revenue": "Which column is revenue?",
+        "ab_cost": "Which column is cost?",
+        "ab_profit_col": "Which column is profit?",
+        "ab_top_period": "For which period?",
+        "ab_n": "How many places in the top?",
+        "ab_preview": "Let's check:\n\n📈 {title}\n🔔 {when}\n🗓 {schedule}\n👤 {to}\n\nIf it were sent now:\n\n{sample}",
+        "btn_settings": "✏ Settings",
+        "an_card": "📈 {title}\n🔔 {when}\n🗓 {schedule}\n👤 {to}\nStatus: {status}",
+        "an_saved": "Saved ✅\n📈 {title}\n🗓 {schedule}\n\nAll rules: /rules · send now: /report",
+        "an_broken": "⚠ The analysis «{title}» is paused.\n{reason}",
+        # ---- access ----
+        "admin_only": "Only an admin can do this.",
+        "to_team": "Team «{team}»",
+        "invite_link": (
+            "Invite link (one-time, valid for 24 hours):\n{link}\n\n"
+            "Send it to the person. When they open it, I'll ask you whether to let them in."
+        ),
+        "invite_bad": "This link is invalid or has expired. Ask the owner for a new one.",
+        "invite_sent": "Request sent to the admin. I'll message you when access is granted.",
+        "invite_already": "You already have access.",
+        "invite_request": "🔑 {name} asks for access.\nChoose their team, or reject:",
+        "btn_no_team": "No team",
+        "btn_new_team": "➕ New team",
+        "btn_reject": "✖ Reject",
+        "type_team": "Type the name of the new team:",
+        "in_team": " (team «{team}»)",
+        "invite_approved_admin": "✅ Access granted to {name}{team}.",
+        "invite_rejected_admin": "✖ Request from {name} rejected.",
+        "invite_welcome": "Access granted ✅\n\n{help}",
+        "invite_denied": "The admin declined your request.",
+        "invite_handled": "This request has already been handled.",
+        "users_title": "People ({n}):",
+        "user_card": "{icon} {name}\nRole: {role}\nTeam: {team}\nNotifications: {muted}",
+        "role_admin": "admin",
+        "role_member": "member",
+        "team_none": "none",
+        "muted_no": "on",
+        "muted_until": "paused until {time}",
+        "muted_forever": "paused",
+        "btn_make_admin": "👑 Make admin",
+        "btn_unadmin": "Remove admin rights",
+        "btn_team": "👥 Team",
+        "btn_remove_user": "🗑 Remove access",
+        "btn_all_users": "⬅ All people",
+        "last_admin": "⚠ Not possible: this is the only admin.",
+        "user_removed": "Access removed.",
+        "user_team_pick": "Team for {name}:",
+        "access_removed": "Your access to this bot has been closed.",
+        "pause_menu": "Pause notifications and reports for you:",
+        "btn_1h": "For 1 hour",
+        "btn_morning": "Until morning (09:00)",
+        "btn_forever": "Until I turn them back on",
+        "paused_until": "⏸ Notifications paused until {time}.",
+        "paused_forever": "⏸ Notifications paused until you turn them back on.",
+        "btn_unpause": "▶ Turn back on",
+        "unpaused": "▶ Notifications are back on.",
+        "cmd_pause": "Pause my notifications",
+        "internal_error": (
+            "⚠ Something unexpected happened inside the bot ({error}). It keeps working; "
+            "the details are in data/sheetbot.log. If it repeats, send that file to whoever set the bot up."
+        ),
+        "cmd_invite": "Invite a person",
+        "cmd_users": "People and teams",
+        "cmd_newrule": "Create a rule",
+        "cmd_rules": "My rules",
+    },
+    "ru": {
+        "start_admin": (
+            "Привет! Я слежу за таблицей «{title}».\n"
+            "Листы: {sheets}.\n\n"
+            "Ты здесь первый, поэтому ты администратор.\n\n"
+            "{help}"
+        ),
+        "start_again": "Снова привет! Слежу за таблицей «{title}».\nЛисты: {sheets}.\n\n{help}",
+        "start_offline": "Привет! Ты администратор.\n\n{error}\n\n{help}",
+        "help": (
+            "Что я умею:\n"
+            "/newrule — создать уведомление, отчёт или анализ\n"
+            "/rules — все правила\n"
+            "/report — отчёт прямо сейчас\n"
+            "/invite — пригласить человека\n"
+            "/users — люди и команды\n"
+            "/pause — пауза моих уведомлений\n"
+            "/status — всё ли работает\n"
+            "/lang — сменить язык"
+        ),
+        "help_member": (
+            "Что я умею для тебя:\n"
+            "/report — отчёт прямо сейчас\n"
+            "/pause — пауза моих уведомлений\n"
+            "/status — всё ли работает\n"
+            "/lang — сменить язык"
+        ),
+        "no_access": (
+            "Извините, это закрытый бот.\n"
+            "Попросите владельца добавить вас и отправьте ему свой chat ID: {chat_id}"
+        ),
+        "status_ok": "✅ Таблица «{title}» на связи\n\n{lines}\n\n🕐 Часовой пояс: {tz}",
+        "status_sheet": "• {name} — строк: {rows}, колонки: {cols}",
+        "status_sheet_empty": "• {name} — пусто",
+        "status_fail": "❌ Не получается прочитать таблицу\n\n{error}\n\n🕐 Часовой пояс: {tz}",
+        "err_bad_key": (
+            "Ключ Google не работает. Скачайте новый JSON-ключ сервисного аккаунта "
+            "и замените файл в папке бота."
+        ),
+        "err_not_shared": (
+            "Нет доступа к таблице. Откройте её, нажмите «Настройки доступа» и добавьте "
+            "этот адрес как читателя:\n{email}\n\nЗаодно проверьте ссылку в .env."
+        ),
+        "err_not_found": "Таблица не найдена. Проверьте ссылку SPREADSHEET в .env.",
+        "err_network": "Google сейчас не отвечает. Я попробую ещё раз, загляните в /status через минуту.",
+        "lang_set": "Язык: русский 🇷🇺",
+        "cmd_status": "Всё ли работает",
+        "cmd_lang": "Сменить язык",
+        # ---- конструктор правил ----
+        "nr_kind": "Что создаём?",
+        "kind_notify": "🔔 Уведомление",
+        "kind_report": "📊 Отчёт",
+        "kind_analysis": "📈 Анализ",
+        "nr_sheet": "Какой лист?",
+        "nr_no_sheets": "В таблице нет листов с названиями колонок в первой строке.",
+        "nr_column": "Лист «{sheet}». Какую колонку проверяем?",
+        "nr_op": "{column} — какое условие?",
+        "op_changed": "изменилось",
+        "op_empty": "пусто",
+        "op_contains": "содержит",
+        "nr_target": "{column} {op} … с чем сравнить?",
+        "tgt_value_num": "С числом",
+        "tgt_value_text": "Со значением",
+        "tgt_column": "С другой колонкой",
+        "nr_target_col": "{column} {op} … с какой колонкой?",
+        "nr_type_number": "Напиши число (например, 10):",
+        "nr_type_text": "Напиши текст, который искать:",
+        "nr_type_value": "Напиши значение:",
+        "nr_not_number": "Это не число. Напиши число, например 10.",
+        "nr_label": (
+            "По какой колонке подписывать строку в сообщении?\n"
+            "Чтобы было «⚠ Молоко: …», а не «⚠ строка 2: …».\n\nСейчас: {current}"
+        ),
+        "label_row": "Номером строки",
+        "nr_to": "Кого уведомлять?",
+        "to_me": "Меня",
+        "to_all": "Всех, у кого есть доступ",
+        "nr_preview": "Проверим:\n\n🔔 {title}\n👤 {to}\n\nСообщение:\n{sample}\n\n{now}",
+        "now_hits": "Сейчас сработало бы для строк: {n} — {names}.",
+        "now_hits_more": "{names} и ещё {more}",
+        "now_none": "Сейчас ни одна строка не подходит под условие.",
+        "now_changed": "Сработает, когда в колонке «{column}» изменится значение.",
+        "btn_save": "✅ Сохранить",
+        "btn_cond": "✏ Условие",
+        "btn_msg": "✏ Сообщение",
+        "btn_to": "✏ Кому",
+        "btn_label": "✏ Название строки",
+        "btn_back_rules": "⬅ К списку правил",
+        "btn_cancel": "✖ Отмена",
+        "btn_back": "⬅ Назад",
+        "nr_msg": (
+            "Напиши свой текст. Названия колонок в фигурных скобках подставятся из строки, "
+            "например:\n⚠ {{{example}}}: осталось {{{column}}}\n\nКолонки: {columns}"
+        ),
+        "btn_msg_reset": "↩ Стандартный текст",
+        "nr_msg_unknown": "Нет такой колонки: {names}. Проверь написание и пришли текст ещё раз.",
+        "nr_saved": "Сохранено ✅\n🔔 {title}\n\nВсе правила: /rules",
+        "nr_cancelled": "Отменено.",
+        "stale_tap": "Это меню устарело — пользуйся последним или начни заново: /newrule",
+        "nr_empty_text": "Здесь нужен текст. Напиши его обычным сообщением.",
+        "nr_too_long": "Слишком длинно — уложись в {n} символов.",
+        "row_word": "строка",
+        # ---- список правил ----
+        "rules_title": "Правила ({n}):",
+        "rules_empty": "Правил пока нет. Создай первое: /newrule",
+        "rule_on": "▶ работает",
+        "rule_off": "⏸ на паузе",
+        "rule_card": "🔔 {title}\n👤 {to}\nСтатус: {status}",
+        "btn_edit": "✏ Изменить",
+        "btn_pause": "⏸ Пауза",
+        "btn_resume": "▶ Включить",
+        "btn_check": "🧪 Проверить сейчас",
+        "btn_delete": "🗑 Удалить",
+        "btn_all_rules": "⬅ Все правила",
+        "rule_delete_q": "Удалить правило «{title}»?",
+        "btn_delete_yes": "🗑 Да, удалить",
+        "rule_deleted": "Правило удалено.",
+        "check_hits": "🧪 {title}\nСейчас срабатывает для строк: {n}\n\n{lines}",
+        "check_more": "…и ещё {n}",
+        "check_none": "🧪 {title}\nСейчас ни одна строка не подходит под условие.",
+        "check_changed": "🧪 {title}\nЭто правило реагирует на изменения, поэтому сейчас показать нечего.",
+        "rule_broken_col": "На листе «{sheet}» больше нет колонки «{name}». Измени правило.",
+        "rule_broken_sheet": "В таблице больше нет листа «{name}». Измени правило.",
+        # ---- уведомления ----
+        "alert_head": "🔔 {title}",
+        "alert_more": "…и ещё {n}",
+        "resolved_head": "✅ {title}",
+        "resolved_line": "{name} — снова в норме",
+        "broken_paused": "⚠ Правило «{title}» остановлено.\n{reason}",
+        "broken_suggest": "Похожее название в таблице: «{name}».",
+        "btn_use": "Использовать «{name}»",
+        "rule_fixed": "Исправлено ✅ Теперь правило смотрит на «{name}».",
+        "rule_broken_status": "⚠ остановлено",
+        "sheet_down": "⚠ Не получается прочитать таблицу.\n{error}\n\nБуду пробовать дальше и напишу, когда связь вернётся.",
+        "sheet_back": "✅ Таблица снова на связи, проверки продолжаются.",
+        "status_rules": "🔔 Правил: {active} активных, {paused} на паузе",
+        "status_checked": "🔄 Последняя проверка: {ago} · каждые {n} мин",
+        "status_never": "🔄 Ещё не проверял · каждые {n} мин",
+        "ago_now": "только что",
+        "ago_min": "{n} мин назад",
+        "ago_hours": "{n} ч назад",
+        "btn_resolved_on": "🔁 Сообщать «снова в норме»: да",
+        "btn_resolved_off": "🔁 Сообщать «снова в норме»: нет",
+        # ---- отчёты ----
+        "report_head": "📊 {sheet} · {period}",
+        "report_empty": "За этот период данных нет.",
+        "report_by": "По колонке «{column}»:",
+        "m_count": "Строк",
+        "m_avg": "Среднее «{column}»",
+        "m_max": "Максимум «{column}»",
+        "m_min": "Минимум «{column}»",
+        "period_yesterday": "Вчера",
+        "period_today": "Сегодня",
+        "period_last7": "Последние 7 дней",
+        "period_this_month": "Этот месяц",
+        "period_last_month": "Прошлый месяц",
+        "freq_daily": "Каждый день",
+        "freq_weekdays": "По будням",
+        "freq_weekly": "Раз в неделю",
+        "freq_monthly": "1-го числа каждого месяца",
+        "freq_weekly_on": "{day}",
+        "wd_0": "По понедельникам", "wd_1": "По вторникам", "wd_2": "По средам", "wd_3": "По четвергам",
+        "wd_4": "По пятницам", "wd_5": "По субботам", "wd_6": "По воскресеньям",
+        "wds_0": "Пн", "wds_1": "Вт", "wds_2": "Ср", "wds_3": "Чт", "wds_4": "Пт", "wds_5": "Сб", "wds_6": "Вс",
+        "rb_sheet": "По какому листу отчёт?",
+        "rb_no_dates": "Ни на одном листе нет колонки с датами. Отчёт считает строки по датам, без неё никак.",
+        "rb_date": "В какой колонке дата?",
+        "rb_period": "За какой период?",
+        "rb_func": "Что посчитать?",
+        "f_sum": "Сумму", "f_avg": "Среднее", "f_max": "Максимум", "f_min": "Минимум", "f_count": "Число строк",
+        "rb_column": "{func} — по какой колонке?",
+        "rb_more": "Считаем: {metrics}\nДобавить ещё показатель?",
+        "btn_more": "➕ Ещё показатель",
+        "btn_done": "Готово",
+        "rb_group": "Разбить по колонке?",
+        "btn_no_split": "Без разбивки",
+        "rb_freq": "Когда присылать?",
+        "rb_weekday": "В какой день?",
+        "rb_time": "Во сколько? ({tz})",
+        "btn_own_time": "Другое время",
+        "rb_type_time": "Напиши время, например 9:30",
+        "rb_bad_time": "Это не время. Напиши так: 9:30 или 18:00.",
+        "rb_preview": "Проверим:\n\n📊 {title}\n🗓 {schedule}\n👤 {to}\n\nЕсли бы отчёт пришёл сейчас:\n\n{sample}",
+        "btn_metrics": "✏ Показатели",
+        "btn_schedule": "✏ Расписание",
+        "btn_period": "✏ Период",
+        "rb_saved": "Сохранено ✅\n📊 {title}\n🗓 {schedule}\n\nВсе правила: /rules · прислать сейчас: /report",
+        "report_card": "📊 {title}\n🗓 {schedule}\n👤 {to}\nСтатус: {status}",
+        "btn_send_now": "📤 Прислать сейчас",
+        "report_sent": "Отправлено ✅",
+        "reports_none": "Отчётов пока нет. Создай: /newrule → 📊 Отчёт",
+        "reports_pick": "Какой отчёт прислать сейчас?",
+        "report_broken": "⚠ Отчёт «{title}» остановлен.\n{reason}",
+        "cmd_report": "Отчёт прямо сейчас",
+        # ---- анализ ----
+        "unit_day": "день к дню", "unit_week": "неделя к неделе", "unit_month": "месяц к месяцу",
+        "an_line": "{period}: {value} (строк: {n})",
+        "an_leaders": "Лидеры:",
+        "an_top_title": "топ-{n} по «{item}»",
+        "an_top_head": "🏆 Топ · {period}",
+        "an_by_qty": "По количеству:",
+        "an_by_profit": "По прибыли:",
+        "an_star": "💎 Скрытая звезда: {name}\nПо количеству только {qty_rank}-е место ({qty}), но по прибыли {profit_rank}-е{margin}.",
+        "an_margin": ": маржа {pct}%",
+        "an_best_seller": "{name} продаётся лучше всех, но принёс всего {profit}.",
+        "an_quiet": "ℹ Сейчас условие не выполняется, поэтому по расписанию я бы промолчал.",
+        "when_always": "всегда",
+        "when_drop": "только если упало больше чем на {pct}%",
+        "when_change": "только если изменилось больше чем на {pct}%",
+        "ab_kind": "Какой анализ?",
+        "ak_compare": "Сравнение периодов",
+        "ak_top": "Топ товаров",
+        "ab_unit": "Какие периоды сравнивать?",
+        "ab_when": "Когда сообщать?",
+        "w_always": "Всегда",
+        "w_drop": "Если упало больше чем на…",
+        "w_change": "Если изменилось больше чем на…",
+        "ab_pct": "Больше чем на сколько процентов?",
+        "btn_own_pct": "Своё",
+        "ab_type_pct": "Напиши число процентов, например 15",
+        "ab_bad_pct": "Напиши число от 1 до 1000, например 15.",
+        "ab_item": "Что считаем товаром?",
+        "ab_qty": "Как считать количество?",
+        "q_rows": "Числом строк",
+        "ab_profit": "Как считать прибыль?",
+        "p_diff": "Выручка − себестоимость",
+        "p_column": "Есть колонка «Прибыль»",
+        "p_none": "Без прибыли",
+        "ab_revenue": "Какая колонка — выручка?",
+        "ab_cost": "Какая колонка — себестоимость?",
+        "ab_profit_col": "Какая колонка — прибыль?",
+        "ab_top_period": "За какой период?",
+        "ab_n": "Сколько мест в топе?",
+        "ab_preview": "Проверим:\n\n📈 {title}\n🔔 {when}\n🗓 {schedule}\n👤 {to}\n\nЕсли бы анализ пришёл сейчас:\n\n{sample}",
+        "btn_settings": "✏ Настройки",
+        "an_card": "📈 {title}\n🔔 {when}\n🗓 {schedule}\n👤 {to}\nСтатус: {status}",
+        "an_saved": "Сохранено ✅\n📈 {title}\n🗓 {schedule}\n\nВсе правила: /rules · прислать сейчас: /report",
+        "an_broken": "⚠ Анализ «{title}» остановлен.\n{reason}",
+        # ---- доступ ----
+        "admin_only": "Это может только администратор.",
+        "to_team": "Команда «{team}»",
+        "invite_link": (
+            "Пригласительная ссылка (одноразовая, действует 24 часа):\n{link}\n\n"
+            "Отправь её человеку. Когда он её откроет, я спрошу тебя, пускать ли его."
+        ),
+        "invite_bad": "Ссылка недействительна или устарела. Попросите у владельца новую.",
+        "invite_sent": "Запрос отправлен администратору. Я напишу, когда доступ откроют.",
+        "invite_already": "У вас уже есть доступ.",
+        "invite_request": "🔑 {name} просит доступ.\nВыбери команду или отклони:",
+        "btn_no_team": "Без команды",
+        "btn_new_team": "➕ Новая команда",
+        "btn_reject": "✖ Отклонить",
+        "type_team": "Напиши название новой команды:",
+        "in_team": " (команда «{team}»)",
+        "invite_approved_admin": "✅ Доступ для {name} открыт{team}.",
+        "invite_rejected_admin": "✖ Запрос от {name} отклонён.",
+        "invite_welcome": "Доступ открыт ✅\n\n{help}",
+        "invite_denied": "Администратор отклонил запрос.",
+        "invite_handled": "Этот запрос уже обработан.",
+        "users_title": "Люди ({n}):",
+        "user_card": "{icon} {name}\nРоль: {role}\nКоманда: {team}\nУведомления: {muted}",
+        "role_admin": "администратор",
+        "role_member": "участник",
+        "team_none": "нет",
+        "muted_no": "включены",
+        "muted_until": "на паузе до {time}",
+        "muted_forever": "на паузе",
+        "btn_make_admin": "👑 Сделать администратором",
+        "btn_unadmin": "Снять права администратора",
+        "btn_team": "👥 Команда",
+        "btn_remove_user": "🗑 Убрать доступ",
+        "btn_all_users": "⬅ Все люди",
+        "last_admin": "⚠ Нельзя: это единственный администратор.",
+        "user_removed": "Доступ убран.",
+        "user_team_pick": "Команда для {name}:",
+        "access_removed": "Ваш доступ к боту закрыт.",
+        "pause_menu": "Пауза уведомлений и отчётов для тебя:",
+        "btn_1h": "На 1 час",
+        "btn_morning": "До утра (09:00)",
+        "btn_forever": "Пока не включу",
+        "paused_until": "⏸ Уведомления на паузе до {time}.",
+        "paused_forever": "⏸ Уведомления на паузе, пока не включишь.",
+        "btn_unpause": "▶ Включить",
+        "unpaused": "▶ Уведомления снова включены.",
+        "cmd_pause": "Пауза моих уведомлений",
+        "internal_error": (
+            "⚠ Внутри бота случилось что-то неожиданное ({error}). Он продолжает работать, "
+            "подробности — в data/sheetbot.log. Если повторяется, отправь этот файл тому, кто настраивал бота."
+        ),
+        "cmd_invite": "Пригласить человека",
+        "cmd_users": "Люди и команды",
+        "cmd_newrule": "Создать правило",
+        "cmd_rules": "Мои правила",
+    },
+}
+
+
+def t(lang: str, key: str, **kwargs: object) -> str:
+    table = TEXTS.get(lang) or TEXTS[DEFAULT_LANG]
+    text = table.get(key) or TEXTS[DEFAULT_LANG][key]
+    return text.format(**kwargs) if kwargs else text
+
+
+def next_lang(lang: str) -> str:
+    i = LANGS.index(lang) if lang in LANGS else 0
+    return LANGS[(i + 1) % len(LANGS)]

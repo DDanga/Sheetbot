@@ -1,0 +1,11 @@
+# docker compose up -d     start in the background (and after every reboot)
+# docker compose logs -f   watch what it's doing
+# docker compose down      stop
+services:
+  sheetbot:
+    build: .
+    image: sheetbot
+    restart: unless-stopped
+    volumes:
+      # this folder: .env, the Google key, and data/ (database, backups, log)
+      - .:/config
