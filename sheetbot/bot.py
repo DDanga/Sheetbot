@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import asyncio
 import logging
-from datetime import datetime, timedelta, timezone
+from datetime import UTC, datetime, timedelta
 
 from telegram import BotCommand, Update
 from telegram.error import BadRequest, NetworkError
@@ -130,7 +130,7 @@ async def on_error(update: object, context: ContextTypes.DEFAULT_TYPE) -> None:
     if isinstance(context.error, NetworkError) and not isinstance(context.error, BadRequest):
         return   # lost connection to Telegram: the library reconnects by itself
     storage: Storage = context.application.bot_data["storage"]
-    now = datetime.now(timezone.utc)
+    now = datetime.now(UTC)
     last = storage.meta("last_error_alert")
     if last and now - datetime.fromisoformat(last) < timedelta(minutes=ERROR_ALERT_MINUTES):
         return

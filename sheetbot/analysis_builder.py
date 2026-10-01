@@ -20,8 +20,18 @@ from .builder import MENU_NUMBERS, edit, grid, is_stale, keyboard, load_tables, 
 from .common import admin_user, clear_drafts, deps, error_text, fit, known_user, recipients, send_safely, to_rows
 from .i18n import t
 from .report_builder import TIMES, broken_text, local_now
-from .reports import Freq, Func, Metric, Period, ReportError, date_columns, last_due, number_columns, text_columns, \
-    valid_time
+from .reports import (
+    Freq,
+    Func,
+    Metric,
+    Period,
+    ReportError,
+    date_columns,
+    last_due,
+    number_columns,
+    text_columns,
+    valid_time,
+)
 from .rules import Recipients, parse_number
 from .sheets import SheetsError, Table, table_from
 from .storage import User

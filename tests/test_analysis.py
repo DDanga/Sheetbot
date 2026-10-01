@@ -32,8 +32,8 @@ def weekly_sum(**kw):
 
 
 def stars(**kw):
-    settings = dict(item="Товар", qty="Количество", profit=A.Profit.DIFF, revenue="Сумма",
-                    cost="Себестоимость", period=Period.LAST_MONTH)
+    settings = {"item": "Товар", "qty": "Количество", "profit": A.Profit.DIFF, "revenue": "Сумма",
+                    "cost": "Себестоимость", "period": Period.LAST_MONTH}
     return A.Analysis(A.Kind.TOP, "Продажи", "Дата", **{**settings, **kw})
 
 
@@ -183,7 +183,7 @@ def test_schedule_stays_quiet_unless_worth_it(tmp_path, clock):
 
 def test_one_builder_at_a_time(tmp_path, clock):
     """A half-finished report waiting for a typed time mustn't swallow the next rule's number."""
-    chat, storage = make_bot(tmp_path)
+    chat, _storage = make_bot(tmp_path)
     chat.command(builder.cmd_newrule)
     for b in ("📊 Отчёт", "Продажи", "Вчера", "Сумму", "Сумма", "Готово", "Без разбивки",
               "Каждый день", "Другое время"):

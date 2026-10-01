@@ -1,0 +1,5 @@
+# keep line endings sane across Windows and Linux
+* text=auto
+# cmd.exe misreads batch files with Unix line endings (labels and goto break)
+*.bat text eol=crlf
+*.xlsx binary

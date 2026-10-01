@@ -128,7 +128,7 @@ def test_report_builder_scenario(tmp_path, clock):
 
 
 def test_typed_time_and_weekly(tmp_path, clock):
-    chat, storage = make_bot(tmp_path)
+    chat, _storage = make_bot(tmp_path)
     chat.command(builder.cmd_newrule)
     for b in ("📊 Отчёт", "Продажи", "Последние 7 дней", "Сумму", "Сумма", "Готово", "Без разбивки",
               "Раз в неделю", "Пн", "Другое время"):
@@ -202,7 +202,7 @@ def test_sent_at_its_time_once(tmp_path, clock):
 
 
 def test_missed_while_off_is_caught_up_only_if_fresh(tmp_path, clock):
-    chat, storage = make_bot(tmp_path)
+    chat, _storage = make_bot(tmp_path)
     build_daily_sales(chat)
     chat.press("✅ Сохранить")
     bot = chat.context.bot
@@ -224,7 +224,7 @@ def test_paused_report_is_not_sent_and_broken_one_is_paused(tmp_path, clock):
     clock["t"] = datetime(2026, 9, 30, 9, 1, tzinfo=TZ)
     tick(chat)
     bot = chat.context.bot
-    [(chat_id, text, markup)] = bot.sent
+    [(_chat_id, text, _markup)] = bot.sent
     assert "Отчёт «Продажи · вчера» остановлен" in text and "нет колонки «Сумма»" in text
     assert storage.reports()[0].paused
     clock["t"] += timedelta(days=1)

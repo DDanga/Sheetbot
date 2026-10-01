@@ -70,7 +70,7 @@ class Report:
         return d
 
     @classmethod
-    def from_dict(cls, d: dict, report_id: int | None = None) -> "Report":
+    def from_dict(cls, d: dict, report_id: int | None = None) -> Report:
         return cls(
             sheet=d["sheet"], date_column=d["date_column"], period=Period(d["period"]),
             metrics=[Metric(Func(m["func"]), m.get("column", "")) for m in d.get("metrics", [])],
@@ -131,9 +131,9 @@ def number_columns(table: Table) -> list[str]:
     found = []
     for i, header in enumerate(table.headers):
         cells = [r[i] for r in table.rows if r[i].strip()]
-        if cells and sum(table.number(c) is not None for c in cells) >= 0.8 * len(cells):
-            if parse_date(cells[0]) is None:
-                found.append(header)
+        mostly_numbers = cells and sum(table.number(c) is not None for c in cells) >= 0.8 * len(cells)
+        if mostly_numbers and parse_date(cells[0]) is None:
+            found.append(header)
     return found
 
 
@@ -240,7 +240,7 @@ def run(report: Report, table: Table | None, today: date) -> Result:
 def last_due(report: Report, now: datetime) -> datetime | None:
     """The most recent moment the report was due at or before `now` (both in local time)."""
     hh, mm = (int(x) for x in report.at.split(":"))
-    for back in range(0, 32):
+    for back in range(32):
         day = (now - timedelta(days=back)).date()
         moment = datetime.combine(day, time(hh, mm), tzinfo=now.tzinfo)
         if moment > now or not _runs_on(report, day):

@@ -10,7 +10,7 @@ from __future__ import annotations
 import json
 import sqlite3
 from dataclasses import dataclass
-from datetime import datetime, timedelta, timezone
+from datetime import UTC, datetime, timedelta
 from pathlib import Path
 
 from .analysis import Analysis
@@ -281,8 +281,8 @@ class Storage:
         return Invite(*row) if row else None
 
     def invite_fresh(self, inv: Invite) -> bool:
-        created = datetime.fromisoformat(inv.created_at).replace(tzinfo=timezone.utc)
-        return datetime.now(timezone.utc) - created < timedelta(hours=INVITE_HOURS)
+        created = datetime.fromisoformat(inv.created_at).replace(tzinfo=UTC)
+        return datetime.now(UTC) - created < timedelta(hours=INVITE_HOURS)
 
     def set_invite(self, token: str, status: str, chat_id: int | None = None, name: str = "") -> None:
         with self.db:
@@ -295,7 +295,7 @@ class Storage:
     def backup(self, folder: Path, keep: int = 7, today: str | None = None) -> Path | None:
         """One copy a day into folder/, the last `keep` days kept. Returns the new file, if any."""
         folder.mkdir(parents=True, exist_ok=True)
-        today = today or datetime.now().strftime("%Y-%m-%d")
+        today = today or datetime.now().astimezone().strftime("%Y-%m-%d")   # local date
         target = folder / f"sheetbot-{today}.sqlite"
         if target.exists():
             return None

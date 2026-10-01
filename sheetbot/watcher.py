@@ -11,7 +11,7 @@ import asyncio
 import difflib
 import logging
 from dataclasses import dataclass, field
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 
 from telegram import InlineKeyboardButton, InlineKeyboardMarkup
 from telegram.ext import ContextTypes
@@ -164,7 +164,7 @@ async def _check_everything(context: ContextTypes.DEFAULT_TYPE) -> None:
     if storage.meta("sheet_down") == "1":
         storage.set_meta("sheet_down", "0")
         await _tell_admins(context, storage, lambda lang: (t(lang, "sheet_back"), None))
-    storage.set_meta("last_check", datetime.now(timezone.utc).isoformat(timespec="seconds"))
+    storage.set_meta("last_check", datetime.now(UTC).isoformat(timespec="seconds"))
 
     tables = {name: table_from(name, values, getattr(sheets, "decimal", None)) for name, values in grids.items()}
     all_rules = storage.rules()
@@ -209,7 +209,7 @@ def check_soon(context: ContextTypes.DEFAULT_TYPE) -> None:
 def ago_text(lang: str, iso: str) -> str:
     if not iso:
         return ""
-    minutes = int((datetime.now(timezone.utc) - datetime.fromisoformat(iso)).total_seconds() // 60)
+    minutes = int((datetime.now(UTC) - datetime.fromisoformat(iso)).total_seconds() // 60)
     if minutes < 1:
         return t(lang, "ago_now")
     if minutes < 60:

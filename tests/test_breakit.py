@@ -68,7 +68,7 @@ def test_columns_without_a_title_or_with_the_same_title():
 
 
 def test_builder_on_a_sheet_with_untitled_and_repeated_columns(tmp_path):
-    chat, storage, _ = with_sheet(tmp_path, "Хаос", [
+    chat, _storage, _ = with_sheet(tmp_path, "Хаос", [
         ["Товар", "", "Остаток", "Остаток"], ["Молоко", "x", "5", "1"], ["Хлеб", "y", "9", "20"]])
     chat.command(builder.cmd_newrule)
     for b in ("🔔 Уведомление", "Хаос"):
@@ -84,7 +84,7 @@ def test_builder_on_a_sheet_with_untitled_and_repeated_columns(tmp_path):
 
 def test_a_sheet_with_150_columns_gets_pages(tmp_path):
     headers = ["Товар"] + [f"Колонка {i}" for i in range(1, 150)]
-    chat, storage, _ = with_sheet(tmp_path, "Широкий", [headers, ["Молоко"] + ["1"] * 149])
+    chat, _storage, _ = with_sheet(tmp_path, "Широкий", [headers, ["Молоко"] + ["1"] * 149])
     chat.command(builder.cmd_newrule)
     for b in ("🔔 Уведомление", "Широкий"):
         chat.press(b)
@@ -99,7 +99,7 @@ def test_a_sheet_with_150_columns_gets_pages(tmp_path):
 
 
 def test_a_huge_cell_doesnt_break_messages(tmp_path):
-    chat, storage, sheets = with_sheet(tmp_path, "Хаос", [
+    chat, _storage, _sheets = with_sheet(tmp_path, "Хаос", [
         ["Товар", "Остаток"], ["Молоко " + "очень " * 2000, "1"], ["Хлеб", "50"]])
     chat.command(builder.cmd_newrule)
     for b in ("🔔 Уведомление", "Хаос", "Остаток", "<", "С числом"):
@@ -148,7 +148,7 @@ def test_a_sheet_with_only_a_header_or_nothing_at_all(tmp_path):
 # ---------------------------------------------------------------- odd input
 
 def test_empty_and_overlong_typed_values(tmp_path):
-    chat, storage = make_bot(tmp_path)
+    chat, _storage = make_bot(tmp_path)
     chat.command(builder.cmd_newrule)
     for b in ("🔔 Уведомление", "Склад", "Поставщик", "содержит"):
         chat.press(b)
@@ -164,7 +164,7 @@ def test_empty_and_overlong_typed_values(tmp_path):
 
 
 def test_absurd_templates(tmp_path):
-    chat, storage = make_bot(tmp_path)
+    chat, _storage = make_bot(tmp_path)
     create_stock_rule(chat)
     chat.press("✏ Сообщение")
     chat.type("x" * 501)
@@ -178,7 +178,7 @@ def test_absurd_templates(tmp_path):
 
 
 def test_numbers_typed_in_odd_ways(tmp_path):
-    chat, storage = make_bot(tmp_path)
+    chat, _storage = make_bot(tmp_path)
     chat.command(builder.cmd_newrule)
     for b in ("🔔 Уведомление", "Склад", "Остаток", "<", "С числом"):
         chat.press(b)
@@ -236,7 +236,7 @@ def test_double_tap_save_on_a_report(tmp_path, clock):  # noqa: F811
 
 
 def test_an_old_menu_after_starting_a_new_one(tmp_path):
-    chat, storage = make_bot(tmp_path)
+    chat, _storage = make_bot(tmp_path)
     chat.command(builder.cmd_newrule)
     old = chat.screen()
     chat.command(builder.cmd_newrule)              # changed their mind, started over

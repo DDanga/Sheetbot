@@ -144,7 +144,7 @@ def test_rule_list_pause_check_edit_delete(tmp_path):
 
 def test_rule_survives_but_reports_a_renamed_column(tmp_path):
     sheets = FakeSheets()
-    chat, storage = make_bot(tmp_path, sheets)
+    chat, _storage = make_bot(tmp_path, sheets)
     create_stock_rule(chat)
     chat.press("✅ Сохранить")
     sheets.grids["Склад"][0][2] = "Остаток, шт"      # someone renames the column

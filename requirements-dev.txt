@@ -1,4 +1,4 @@
 -r requirements.txt
 pytest>=8
 openpyxl>=3.1
-ruff>=0.6
+ruff==0.16.9   # pinned: new versions add checks, and CI would fail on old code

@@ -11,8 +11,18 @@ from dataclasses import asdict, dataclass, field
 from datetime import date, timedelta
 from enum import Enum
 
-from .reports import Freq, Func, Metric, Period, ReportError, _aggregate, currency_of, parse_date, period_range, \
-    text_columns
+from .reports import (
+    Freq,
+    Func,
+    Metric,
+    Period,
+    ReportError,
+    _aggregate,
+    currency_of,
+    parse_date,
+    period_range,
+    text_columns,
+)
 from .rules import Recipients
 from .sheets import Table
 
@@ -79,7 +89,7 @@ class Analysis:
         return d
 
     @classmethod
-    def from_dict(cls, d: dict, an_id: int | None = None) -> "Analysis":
+    def from_dict(cls, d: dict, an_id: int | None = None) -> Analysis:
         m = d.get("metric") or {"func": "sum", "column": ""}
         return cls(
             kind=Kind(d["kind"]), sheet=d["sheet"], date_column=d["date_column"],
@@ -247,7 +257,7 @@ def top(an: Analysis, table: Table | None, today: date) -> TopResult:
                       for i, (name, _) in enumerate(by_profit[:an.top_n])
                       if qty_rank[name] - (i + 1) >= STAR_GAP]
         if candidates:
-            gap, p_rank, name = max(candidates)
+            _gap, p_rank, name = max(candidates)
             best = by_qty[0][0]
             margin = profit[name] / revenue[name] * 100 if revenue.get(name) else None
             star = Star(name, qty_rank[name], p_rank, qty[name], margin, best, profit[best])

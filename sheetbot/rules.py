@@ -77,7 +77,7 @@ class Rule:
         return d
 
     @classmethod
-    def from_dict(cls, d: dict, rule_id: int | None = None) -> "Rule":
+    def from_dict(cls, d: dict, rule_id: int | None = None) -> Rule:
         return cls(
             sheet=d["sheet"], column=d["column"], op=Op(d["op"]),
             target=Target(d["target"]) if d.get("target") else None,

@@ -1,6 +1,6 @@
 """Invites, approval, teams, admin rights, /pause — between two real-looking people."""
 import asyncio
-from datetime import datetime, timedelta, timezone
+from datetime import UTC, datetime, timedelta
 from zoneinfo import ZoneInfo
 
 from sheetbot import access, builder, report_builder, watcher
@@ -124,9 +124,9 @@ def test_team_recipients_and_pause(tmp_path):
     anna_chat.command(access.cmd_pause)
     anna_chat.press("For 1 hour")
     assert "paused until" in anna_chat.last
-    assert storage.user(ANNA).muted(datetime.now(timezone.utc))
+    assert storage.user(ANNA).muted(datetime.now(UTC))
     anna_chat.press("▶ Turn back on")
-    assert not storage.user(ANNA).muted(datetime.now(timezone.utc))
+    assert not storage.user(ANNA).muted(datetime.now(UTC))
 
 
 def test_mute_until_morning():

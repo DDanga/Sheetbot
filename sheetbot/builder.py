@@ -20,11 +20,11 @@ from telegram.ext import ContextTypes
 
 from .common import admin_user, clear_drafts, deps, error_text, fit, to_rows
 from .i18n import t
-from .texts import broken_text, op_text, recipients_text, report_title, rule_title
-from .watcher import apply_fix, check_soon
 from .rules import Match, Op, Recipients, Rule, RuleError, Target, check, parse_number, placeholders, render
 from .sheets import SheetsError, Table
 from .storage import Storage, User
+from .texts import broken_text, op_text, recipients_text, report_title, rule_title
+from .watcher import apply_fix, check_soon
 
 log = logging.getLogger(__name__)
 
@@ -327,7 +327,7 @@ async def on_builder_button(update: Update, context: ContextTypes.DEFAULT_TYPE) 
     elif action == "kind":
         if arg == "report":
             await query.answer()
-            from .report_builder import start   # the report builder lives next door
+            from .report_builder import start  # the report builder lives next door
             await start(update, context, user)
             return
         if arg == "analysis":

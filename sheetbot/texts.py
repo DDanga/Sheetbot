@@ -46,7 +46,7 @@ def fmt_number(lang: str, value: float | None, decimals: int | None = None) -> s
     if decimals is not None:
         text = f"{value:,.{decimals}f}"
     elif abs(value - round(value)) < 1e-9:
-        text = f"{int(round(value)):,}"
+        text = f"{round(value):,}"
     else:
         text = f"{value:,.2f}".rstrip("0").rstrip(".")
     if lang != "ru":

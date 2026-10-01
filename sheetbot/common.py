@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import asyncio
 import logging
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 
 from telegram import Update
 from telegram.error import BadRequest, NetworkError, RetryAfter, TelegramError
@@ -104,7 +104,7 @@ def recipients(storage: Storage, item) -> list[User]:
     else:
         owner = storage.user(item.owner)
         users = [owner] if owner else []
-    now = datetime.now(timezone.utc)
+    now = datetime.now(UTC)
     return [u for u in users if not u.muted(now)]
 
 

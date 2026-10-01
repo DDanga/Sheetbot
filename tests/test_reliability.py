@@ -14,7 +14,6 @@ from sheetbot.sheets import Problem, SheetsClient, SheetsError, quote_sheet
 from .fakes import FakeSheets, make_bot
 from .test_builder import create_stock_rule
 
-
 # ---- Google ----
 
 class FlakyClient(SheetsClient):
@@ -80,7 +79,7 @@ def test_sheet_down_only_after_three_failed_checks(tmp_path):
 
 
 def test_one_crashing_rule_doesnt_stop_the_others(tmp_path, monkeypatch):
-    chat, storage = make_bot(tmp_path)
+    chat, _storage = make_bot(tmp_path)
     create_stock_rule(chat)
     chat.press("✅ Сохранить")
     chat.command(builder.cmd_newrule)
@@ -158,7 +157,7 @@ def test_admins_hear_about_crashes_but_not_every_time(tmp_path):
 # ---- database ----
 
 def test_daily_backup_keeps_a_week(tmp_path):
-    chat, storage = make_bot(tmp_path)
+    _chat, storage = make_bot(tmp_path)
     folder = tmp_path / "backups"
     for day in range(1, 10):
         assert storage.backup(folder, today=f"2026-10-{day:02d}") is not None

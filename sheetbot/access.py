@@ -10,7 +10,7 @@ from __future__ import annotations
 
 import logging
 import secrets
-from datetime import datetime, time, timedelta, timezone
+from datetime import UTC, datetime, time, timedelta
 
 from telegram import Update
 from telegram.ext import ContextTypes
@@ -254,7 +254,7 @@ def local_time(iso: str, tz) -> str:
 
 
 def pause_view(lang: str, u: User, tz):
-    now = datetime.now(timezone.utc)
+    now = datetime.now(UTC)
     if u.muted(now):
         text = (t(lang, "paused_forever") if u.muted_until == "forever"
                 else t(lang, "paused_until", time=local_time(u.muted_until, tz)))
@@ -275,7 +275,7 @@ async def cmd_pause(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
 
 
 def mute_until(choice: str, tz, now: datetime | None = None) -> str:
-    now = now or datetime.now(timezone.utc)
+    now = now or datetime.now(UTC)
     if choice == "forever":
         return "forever"
     if choice == "1h":
@@ -284,7 +284,7 @@ def mute_until(choice: str, tz, now: datetime | None = None) -> str:
     morning = datetime.combine(local.date(), MORNING, tzinfo=tz)
     if morning <= local:
         morning += timedelta(days=1)
-    return morning.astimezone(timezone.utc).isoformat(timespec="seconds")
+    return morning.astimezone(UTC).isoformat(timespec="seconds")
 
 
 async def on_pause_button(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
